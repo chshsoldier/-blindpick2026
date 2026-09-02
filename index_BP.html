@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盲選 2026｜大學生報名</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16221C; --ink-2:#1E2E27; --ink-3:#263A31;
+  --paper:#EAE7DC; --paper-dim:#9BA79E; --seal:#D9A31E; --alert:#D4614A;
+  --line:rgba(234,231,220,0.14);
+  --serif:'Noto Serif TC','Songti TC',serif;
+  --sans:'Noto Sans TC',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-scheme:dark;padding:0 0 96px}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px}
+
+.topbar{border-bottom:1px solid var(--line);padding:15px 0;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--paper-dim);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;line-height:1.7}
+.topbar b{color:var(--paper);font-weight:500}
+.foot a{color:var(--seal);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper-dim);display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:22px 0 0}
+.eyebrow span::before{content:"·";margin-right:14px;color:var(--seal)}
+.eyebrow span:first-child::before{content:none;margin:0}
+
+.hero{padding:52px 0 44px;border-bottom:1px solid var(--line)}
+.title{font-family:var(--serif);font-weight:900;font-size:clamp(58px,15vw,132px);line-height:.88;letter-spacing:.06em;margin:0}
+.title em{font-style:normal;color:var(--seal)}
+.lede{font-family:var(--serif);font-weight:500;font-size:clamp(17px,2.6vw,23px);line-height:1.7;margin:26px 0 0;max-width:30ch}
+.sub{color:var(--paper-dim);font-size:14px;line-height:1.9;margin:18px 0 0;max-width:46ch}
+
+.h{display:flex;align-items:baseline;gap:14px;padding:46px 0 20px}
+.h b{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:.08em}
+.h i{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.2em;color:var(--paper-dim)}
+.h hr{flex:1;border:0;border-top:1px solid var(--line)}
+
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.act{background:var(--ink-2);border:1px solid var(--line);border-radius:3px;padding:20px 18px}
+.act u{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--seal);text-decoration:none;display:block;line-height:1}
+.act h4{font-family:var(--serif);font-size:17px;font-weight:700;margin:14px 0 9px;letter-spacing:.05em}
+.act p{font-size:13px;line-height:1.85;color:var(--paper-dim);margin:0}
+.draw{margin-top:16px;padding-left:15px;border-left:2px solid var(--seal);font-size:13px;line-height:1.85;color:var(--paper-dim)}
+.draw b{color:var(--paper);font-weight:500}
+
+.tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ticket{position:relative;text-align:left;width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:3px;padding:20px 18px 18px;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease;color:inherit;font:inherit}
+.ticket:hover:not(:disabled){transform:translateY(-3px);border-color:rgba(217,163,30,.5)}
+.ticket:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
+.ticket[data-on="1"]{background:var(--ink-3);border-color:var(--seal)}
+.ticket:disabled{cursor:not-allowed;opacity:.55}
+.tk-id{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--seal);display:flex;justify-content:space-between}
+.tk-date{font-family:var(--mono);font-size:34px;font-weight:500;margin:10px 0 2px}
+.tk-meta{font-size:12px;color:var(--paper-dim);letter-spacing:.08em}
+.perf{margin:16px -18px;border-top:1px dashed rgba(234,231,220,.28);position:relative}
+.perf::before,.perf::after{content:"";position:absolute;top:-7px;width:14px;height:14px;border-radius:50%;background:var(--ink)}
+.perf::before{left:-7px}.perf::after{right:-7px}
+.redact-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--paper-dim);text-transform:uppercase}
+.redact{margin:7px 0 6px;height:26px;border-radius:2px;background:repeating-linear-gradient(135deg,#D9A31E 0 7px,#B8871A 7px 14px);display:flex;align-items:center;justify-content:center}
+.redact span{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.3em;color:var(--ink)}
+.bar{height:3px;background:rgba(234,231,220,.13);margin:14px 0 8px}
+.bar i{display:block;height:100%;background:var(--seal);transition:width .5s ease}
+.bar i[data-full="1"]{background:var(--alert)}
+.left{font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between}
+.left b{font-weight:600;font-size:15px}
+.left u{text-decoration:none;color:var(--paper-dim)}
+.full{color:var(--alert);letter-spacing:.16em;font-size:12px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px}
+.wide{grid-column:1/-1}
+.label{display:block;font-size:12px;letter-spacing:.12em;color:var(--paper-dim);margin-bottom:7px}
+.label b{color:var(--seal);font-weight:400;margin-left:3px}
+.input,.select{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:2px;padding:12px 13px;color:var(--paper);font-family:var(--sans);font-size:15px;transition:border-color .15s ease}
+.input.mono{font-family:var(--mono);letter-spacing:.06em}
+.input:focus,.select:focus{outline:none;border-color:var(--seal)}
+.input.bad,.select.bad{border-color:var(--alert)}
+.input::placeholder{color:rgba(155,167,158,.6)}
+.hint{font-size:12px;color:var(--paper-dim);margin:6px 0 0;line-height:1.6}
+.err{font-size:12px;color:var(--alert);margin:6px 0 0;min-height:1px}
+.check{display:flex;gap:11px;align-items:flex-start;font-size:13px;line-height:1.75}
+.check input{margin-top:4px;width:15px;height:15px;accent-color:var(--seal);flex:none}
+.note{background:var(--ink-2);border-left:2px solid var(--seal);padding:16px 18px;font-size:13px;line-height:1.85;color:var(--paper-dim)}
+.note b{color:var(--paper);font-weight:500}
+.submit{width:100%;margin-top:26px;padding:18px;border:0;border-radius:2px;background:var(--seal);color:var(--ink);cursor:pointer;font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:.2em;transition:filter .15s ease}
+.submit:hover:not(:disabled){filter:brightness(1.08)}
+.submit:disabled{opacity:.45;cursor:not-allowed}
+.submit:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+
+.stub{background:var(--paper);color:var(--ink);border-radius:3px;padding:30px 26px;margin-top:8px}
+.stub-top{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.22em}
+.code{font-family:var(--mono);font-size:clamp(30px,8vw,46px);font-weight:600;margin:12px 0 4px}
+.stub hr{border:0;border-top:1px dashed rgba(22,34,28,.3);margin:20px 0}
+.kv{display:grid;grid-template-columns:80px 1fr;gap:10px 16px;font-size:14px;margin:0}
+.kv dt{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:#5B6B61;padding-top:3px}
+.kv dd{margin:0;font-weight:500}
+.redact-dark{background:repeating-linear-gradient(135deg,#16221C 0 7px,#2A3B33 7px 14px);color:var(--paper);padding:5px 12px;display:inline-block;border-radius:2px;font-family:var(--mono);font-size:11px;letter-spacing:.24em}
+.lnk{background:none;border:0;color:var(--seal);cursor:pointer;font-family:var(--mono);font-size:12px;letter-spacing:.16em;padding:0}
+.lnk:hover{text-decoration:underline}
+.foot{margin-top:54px;padding-top:22px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--paper-dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hide{display:none}
+@media(max-width:720px){.acts,.tickets{grid-template-columns:1fr}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span><b>臺灣大學政治系　童涵浦教授研究計畫</b>　政治態度調查 2026</span>
+    <span>主辦單位：臺大政治系</span>
+  </div>
+  <div class="eyebrow">
+    <span>限大學部在學生</span><span>三梯次</span>
+    <span>每梯 <span id="cap"></span> 人</span>
+    <span id="totalLeft"></span>
+  </div>
+
+  <header class="hero">
+    <h1 class="title">盲<em>選</em></h1>
+    <p class="lede">你選的是時間，不是場次。</p>
+    <p class="sub">每個梯次當天同時進行三場活動。三場在做什麼都寫在下面，你可以先看，但不能挑——報到之後現場抽籤，抽到哪一場就是哪一場。</p>
+  </header>
+
+  <div id="page">
+    <div class="h"><b>當天的三場活動</b><i>全部公開</i><hr></div>
+    <div class="acts" id="acts"></div>
+    <p class="draw">三場活動在同一天、同一時段平行進行，<b>報名時不能指定</b>。報到完成後現場公開抽籤，抽出的場次即為你當天參加的場次，<b>抽籤結果不接受更換或互換</b>。</p>
+
+    <div class="h"><b>選擇梯次</b><i>STEP 01</i><hr>
+      <button class="lnk" onclick="resetDemo()">重設示範名額</button>
+    </div>
+    <div class="tickets" id="tickets"></div>
+    <p class="err" id="err-session"></p>
+
+    <div class="h"><b>報名資料</b><i>STEP 02</i><hr></div>
+    <div class="grid">
+      <div>
+        <label class="label" for="name">姓名<b>*</b></label>
+        <input id="name" class="input" placeholder="與證件相同的全名">
+        <p class="err" id="err-name"></p>
+      </div>
+      <div>
+        <label class="label" for="birthday">出生年月日<b>*</b></label>
+        <input id="birthday" type="date" class="input mono" min="1975-01-01" max="2011-12-31">
+        <p class="err" id="err-birthday"></p>
+      </div>
+      <div class="wide">
+        <label class="label" for="idNo">身分證字號<b>*</b></label>
+        <input id="idNo" class="input mono" maxlength="10" placeholder="A123456789">
+        <label class="check" style="margin-top:10px"><input type="checkbox" id="foreign"><span>我是僑生／外籍生，填寫的是居留證統一證號</span></label>
+        <p class="hint">用途僅限投保活動平安險（保險公司需要姓名、出生年月日、身分證字號三項），不作其他利用，活動結束後 30 日內銷毀。</p>
+        <p class="err" id="err-idNo"></p>
+      </div>
+      <div>
+        <label class="label" for="school">就讀學校<b>*</b></label>
+        <select id="school" class="select"></select>
+        <input id="schoolOther" class="input hide" style="margin-top:10px" placeholder="學校全名">
+        <p class="err" id="err-school"></p>
+      </div>
+      <div>
+        <label class="label" for="studentId">學號<b>*</b></label>
+        <input id="studentId" class="input mono" placeholder="B11901234">
+        <p class="err" id="err-studentId"></p>
+      </div>
+      <div>
+        <label class="label" for="grade">年級<b>*</b></label>
+        <select id="grade" class="select">
+          <option value="">請選擇</option>
+          <option>大一</option><option>大二</option><option>大三</option><option>大四</option>
+          <option>大五（含以上）</option><option>延畢中</option>
+          <option value="__no__">以上皆非（研究生／在職專班／已畢業）</option>
+        </select>
+        <p class="hint">本次活動限大學部在學學生。</p>
+        <p class="err" id="err-grade"></p>
+      </div>
+      <div>
+        <label class="label" for="email">電子信箱<b>*</b></label>
+        <input id="email" type="email" class="input mono" placeholder="you@mail.school.edu.tw" oninput="mailTip()">
+        <p class="hint">驗證信會寄到這裡，點開連結才算完成報名。<span style="color:var(--seal)">建議使用學校信箱（.edu.tw）</span>，可加快資格審核。</p>
+        <p class="hint" id="mailTip" style="color:var(--seal)"></p>
+        <p class="err" id="err-email"></p>
+      </div>
+      <div>
+        <label class="label" for="phone">手機<b>*</b></label>
+        <input id="phone" class="input mono" placeholder="0912345678">
+        <p class="hint">僅用於活動前一日提醒與當日聯繫。</p>
+        <p class="err" id="err-phone"></p>
+      </div>
+      <div class="wide">
+        <label class="label" for="referral">推薦人代碼<span style="color:var(--paper-dim);margin-left:6px">（選填）</span></label>
+        <input id="referral" class="input mono" maxlength="6" placeholder="ABC123" oninput="refTip()">
+        <p class="hint">由推薦人提供，格式為 3 碼英文 + 3 碼數字。沒有代碼可留空，不影響報名。</p>
+        <p class="hint" id="refTip"></p>
+        <p class="err" id="err-referral"></p>
+      </div>
+      <div class="wide" style="position:absolute;left:-9999px" aria-hidden="true">
+        <label for="website">請勿填寫此欄</label>
+        <input id="website" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="wide note">
+        <b>報名前先確認這四件事</b><br>
+        一、報名時無法指定活動場次，報到後由現場公開抽籤決定，抽籤結果不接受更換或互換。<br>
+        二、報到需出示 <b>學生證正本</b>，或校務系統的 <b>線上在學證明</b>、學籍查詢畫面等相關證明文件；無法證明在學身分者無法入場，名額直接讓給現場候補。<br>
+        三、限 <b>大學部在學學生</b>，研究生、在職專班、已畢業者不在本次對象內。每人限報一個梯次，如重複報名，<b>以最後一筆為準</b>，先前報名之名額將自動釋出。<br>四、<b>報名截止後不得再更改梯次</b>，請於報名前確認可出席之日期。活動全日進行（08:40–18:00），請預留整天時間。
+      </div>
+      <div class="wide">
+        <label class="check"><input type="checkbox" id="agreePrivacy"><span>我已閱讀個人資料蒐集告知事項，同意主辦單位於「活動報名與資格審查、投保活動平安險、活動聯繫與通知」目的內，於活動結束後 30 日之期間內處理及利用上述資料，並瞭解可隨時要求查詢、更正或刪除。</span></label>
+        <p class="err" id="err-agreePrivacy"></p>
+      </div>
+      <div class="wide">
+        <label class="check"><input type="checkbox" id="agreeCheckIn"><span>我確認自己目前為大學部在學學生，並同意當日出示學生證或其他在學證明文件供查驗。</span></label>
+        <p class="err" id="err-agreeCheckIn"></p>
+      </div>
+    </div>
+    <button class="submit" id="submitBtn" onclick="submitForm()">送出報名</button>
+  </div>
+
+  <div id="donePage" class="hide"></div>
+
+  <div class="foot">
+    <span>主辦單位：臺灣大學政治學系</span>
+    <span>聯絡信箱：<a href="mailto:dadiresearch6618@gmail.com">dadiresearch6618@gmail.com</a></span>
+    <span>報名截止：各梯次前 7 日</span>
+  </div>
+</div>
+
+<script>
+/* ═══ 上線設定 ═══
+   API_URL 留空 = 示範模式（資料只留在本機，不會送出）
+   填入 Apps Script 網址 = 正式模式（資料寫入 Google 試算表）  */
+var API_URL="https://script.google.com/macros/s/AKfycbyJMnbCzAZi65lQ-NG1fguJwVf183GV2Y_Wx6eXuf1sGQIDmuuJifdVZ4F25tCsWkZ4/exec";
+var API_SECRET="Dadi90576618#TW";   // 必須與 Apps Script 的 SECRET 相同
+var PAGE_AT=Date.now();
+
+var CONFIG={capacity:220,suggestSchoolEmail:true,allowWaitlist:true};
+var SESSIONS=[
+ {id:"A",date:"10 / 17",weekday:"週六",time:"08:40 – 18:00"},
+ {id:"B",date:"10 / 18",weekday:"週日",time:"08:40 – 18:00"},
+ {id:"C",date:"11 / 07",weekday:"週六",time:"08:40 – 18:00"}];
+var ACTIVITIES=[
+ {no:"一",name:"校園永續生活",desc:"從日常校園理解人、環境與土地的關係。"},
+ {no:"二",name:"黑熊學院民防課程",desc:"一日民防基礎。"},
+ {no:"三",name:"紅十字會基本救命術",desc:"基本救命術 BLS／CPR＋AED。"}];
+var SEED={A:220,B:163,C:71,waitA:5,waitB:0,waitC:0};
+var SCHOOLS=["國立臺灣大學","國立政治大學","國立清華大學","國立陽明交通大學","國立成功大學","國立臺灣師範大學","國立中央大學","國立中山大學","國立中興大學","國立中正大學","國立臺北大學","國立臺灣科技大學","國立臺北科技大學","國立雲林科技大學","國立高雄科技大學","國立臺灣海洋大學","國立東華大學","國立暨南國際大學","國立宜蘭大學","國立聯合大學","國立屏東大學","國立臺東大學","國立嘉義大學","國立彰化師範大學","國立高雄師範大學","國立臺北教育大學","國立臺中教育大學","國立臺南大學","國立臺北護理健康大學","國立臺北藝術大學","國立臺灣藝術大學","國立臺南藝術大學","國立體育大學","國立臺北商業大學","臺北市立大學","淡江大學","輔仁大學","東吳大學","中原大學","逢甲大學","東海大學","靜宜大學","元智大學","中國文化大學","世新大學","銘傳大學","實踐大學","大同大學","華梵大學","真理大學","長庚大學","臺北醫學大學","中國醫藥大學","中山醫學大學","高雄醫學大學","慈濟大學","亞洲大學","義守大學","長榮大學","佛光大學","南華大學","開南大學","玄奘大學","南臺科技大學","崑山科技大學","朝陽科技大學","嶺東科技大學","龍華科技大學","明新科技大學","建國科技大學","正修科技大學","樹德科技大學","弘光科技大學","中國科技大學","致理科技大學","德明財經科技大學","文藻外語大學"];
+
+var LC={A:10,B:11,C:12,D:13,E:14,F:15,G:16,H:17,I:34,J:18,K:19,L:20,M:21,N:22,O:35,P:23,Q:24,R:25,S:26,T:27,U:28,V:29,W:32,X:30,Y:31,Z:33};
+function validTwId(raw){var s=(raw||"").toUpperCase().trim();
+ if(!/^[A-Z][1289]\d{8}$/.test(s))return false;
+ var c=LC[s[0]],sum=Math.floor(c/10)+(c%10)*9,w=[8,7,6,5,4,3,2,1,1];
+ for(var i=0;i<9;i++)sum+=parseInt(s[i+1],10)*w[i];
+ return sum%10===0;}
+function validResId(raw){var s=(raw||"").toUpperCase().trim();
+ return /^[A-Z][A-D]\d{8}$/.test(s)||/^[A-Z][89]\d{8}$/.test(s);}
+
+var MEM={};
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v));}catch(e){if(v===undefined)return MEM[k]||null;MEM[k]=v;}}
+var KEY="blindpick:counts:v1";
+var counts=store(KEY)||JSON.parse(JSON.stringify(SEED));
+var selected="";
+
+function saveCounts(){if(!API_URL)store(KEY,counts);}
+function loadCounts(){
+ if(!API_URL){counts=store(KEY)||JSON.parse(JSON.stringify(SEED));render();return;}
+ document.getElementById("totalLeft").textContent="名額讀取中…";
+ fetch(API_URL+"?action=counts",{method:"GET"})
+  .then(function(r){return r.json()})
+  .then(function(d){if(d&&typeof d.A==="number"){counts=d;render();}else{throw 0;}})
+  .catch(function(){document.getElementById("totalLeft").textContent="名額讀取失敗，請重新整理";});
+}
+function resetDemo(){
+ if(API_URL){loadCounts();return;}
+ counts=JSON.parse(JSON.stringify(SEED));saveCounts();selected="";render();}
+function left(id){return Math.max(0,CONFIG.capacity-(counts[id]||0));}
+
+function render(){
+ document.getElementById("cap").textContent=CONFIG.capacity;
+ var tl=SESSIONS.reduce(function(a,s){return a+left(s.id)},0);
+ document.getElementById("totalLeft").textContent="尚餘 "+tl+" 位";
+ document.getElementById("acts").innerHTML=ACTIVITIES.map(function(a){
+  return '<div class="act"><u>'+a.no+'</u><h4>'+a.name+'</h4><p>'+a.desc+'</p></div>';}).join("");
+ document.getElementById("tickets").innerHTML=SESSIONS.map(function(s){
+  var r=left(s.id),full=r===0,pct=Math.round((CONFIG.capacity-r)/CONFIG.capacity*100);
+  return '<button class="ticket" data-on="'+(selected===s.id?1:0)+'" onclick="pick(\''+s.id+'\')">'
+   +'<div class="tk-id"><span>梯次 '+s.id+'</span><span>'+(selected===s.id?"已選":"")+'</span></div>'
+   +'<div class="tk-date">'+s.date+'</div>'
+   +'<div class="tk-meta">'+s.weekday+'　'+s.time+'</div>'
+   +'<div class="perf"></div>'
+   +'<div class="redact-label">分配場次</div>'
+   +'<div class="redact"><span>當日抽籤</span></div>'
+   +'<div class="bar"><i style="width:'+pct+'%" data-full="'+(full?1:0)+'"></i></div>'
+   +(full?'<div class="full">已額滿　可登記候補</div>'
+        :'<div class="left"><span><b>'+r+'</b> 位</span><u>/ '+CONFIG.capacity+'</u></div>')
+   +'</button>';}).join("");
+}
+function pick(id){selected=id;setErr("session","");render();}
+
+var sel=document.getElementById("school");
+sel.innerHTML='<option value="">請選擇</option>'+SCHOOLS.map(function(s){return '<option>'+s+'</option>'}).join("")+'<option value="__other__">其他（自行填寫）</option>';
+sel.onchange=function(){document.getElementById("schoolOther").classList.toggle("hide",sel.value!=="__other__")};
+
+var REFERRERS={"ABC123":"示範推薦人（社團）","XYZ789":"示範推薦人（系學會）"};
+function refTip(){
+ var f=document.getElementById("referral");
+ f.value=f.value.toUpperCase().replace(/[^A-Z0-9]/g,"");
+ var v=f.value,t=document.getElementById("refTip");
+ if(!v){t.textContent="";t.style.color="";return;}
+ if(!/^[A-Z]{3}\d{3}$/.test(v)){t.textContent="";t.style.color="";return;}
+ if(REFERRERS[v]){t.textContent="✓ 已套用推薦人："+REFERRERS[v];t.style.color="#7FB069";}
+ else{t.textContent="查無此代碼，仍可送出，但推薦獎勵將無法計算。";t.style.color="var(--seal)";}
+}
+function mailTip(){var v=document.getElementById("email").value.trim().toLowerCase();
+ document.getElementById("mailTip").textContent=
+  (CONFIG.suggestSchoolEmail&&v.indexOf("@")>0&&v.slice(-7)!==".edu.tw")
+   ?"非學校信箱仍可完成報名，報到時請務必攜帶在學證明文件。":"";}
+function val(id){return document.getElementById(id).value.trim()}
+function setErr(k,m){var e=document.getElementById("err-"+k);if(e)e.textContent=m;
+ var f=document.getElementById(k);if(f)f.classList.toggle("bad",!!m);}
+
+function submitForm(){
+ var e={};
+ if(!selected)e.session="先選一個梯次";
+ if(val("name").length<2)e.name="填寫證件上的全名";
+ var b=val("birthday");
+ if(!b)e.birthday="填寫出生年月日";
+ var id=val("idNo").toUpperCase(),fg=document.getElementById("foreign").checked;
+ if(!id)e.idNo="填寫身分證字號";
+ else if(fg?!validResId(id):!validTwId(id))e.idNo=fg?"居留證號格式不符":"身分證字號檢查碼不符，請重新確認";
+ var sc=sel.value;
+ if(!sc)e.school="選擇就讀學校";
+ else if(sc==="__other__"&&!val("schoolOther"))e.school="填寫學校全名";
+ if(!/^[A-Za-z0-9]{4,15}$/.test(val("studentId")))e.studentId="學號為 4–15 碼英數字";
+ var rf=val("referral").toUpperCase();
+ if(rf&&!/^[A-Z]{3}\d{3}$/.test(rf))e.referral="格式為 3 碼英文 + 3 碼數字，例如 ABC123";
+ var gr=document.getElementById("grade").value;
+ if(!gr)e.grade="選擇目前年級";
+ else if(gr==="__no__")e.grade="本次活動限大學部在學學生，很抱歉無法受理報名";
+ var m=val("email").toLowerCase();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m))e.email="填寫可收信的信箱";
+ if(!/^09\d{8}$/.test(val("phone").replace(/[\s-]/g,"")))e.phone="填寫 10 碼手機號碼";
+ if(!document.getElementById("agreePrivacy").checked)e.agreePrivacy="需勾選才能送出";
+ if(!document.getElementById("agreeCheckIn").checked)e.agreeCheckIn="需勾選才能送出";
+
+ ["session","name","birthday","idNo","school","studentId","grade","referral","email","phone","agreePrivacy","agreeCheckIn"]
+  .forEach(function(k){setErr(k,e[k]||"")});
+ if(Object.keys(e).length){var f=document.querySelector(".bad")||document.querySelector(".err:not(:empty)");
+  if(f)f.scrollIntoView({block:"center",behavior:"smooth"});return;}
+
+ var person={name:val("name"),school:sc==="__other__"?val("schoolOther"):sc,
+  studentId:val("studentId").toUpperCase(),email:val("email")};
+
+ // 示範模式：僅在本機計數
+ if(!API_URL){
+  var taken=counts[selected]||0,wait=false,seat;
+  if(taken>=CONFIG.capacity){wait=true;counts["wait"+selected]=(counts["wait"+selected]||0)+1;seat=counts["wait"+selected];}
+  else{counts[selected]=taken+1;seat=taken+1;}
+  saveCounts();
+  person.code=(wait?"W":"")+selected+"-"+Date.now().toString(36).toUpperCase().slice(-5);
+  person.session=selected;person.wait=wait;person.seat=seat;
+  showDone(person);return;
+ }
+
+ // 正式模式：送到 Apps Script
+ var btn=document.getElementById("submitBtn");
+ btn.disabled=true;btn.textContent="送出中…";
+ fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+  body:JSON.stringify({
+   secret:API_SECRET,hp:val("website"),elapsed:Date.now()-PAGE_AT,
+   session:selected,name:person.name,birthday:val("birthday"),
+   idNo:id,foreign:fg,school:person.school,studentId:person.studentId,
+   grade:gr,email:person.email,phone:val("phone").replace(/[\s-]/g,""),
+   referral:rf,agreePrivacy:true,agreeCheckIn:true})})
+  .then(function(r){return r.json()})
+  .then(function(d){
+   btn.disabled=false;btn.textContent="送出報名";
+   if(!d||!d.ok){setErr("session",(d&&d.message)||"送出失敗，請稍後再試一次");
+    document.getElementById("err-session").scrollIntoView({block:"center",behavior:"smooth"});return;}
+   if(d.counts)counts=d.counts;
+   person.code=d.code;person.session=d.session;person.wait=d.waitlisted;person.seat=d.seat;
+   showDone(person);})
+  .catch(function(){
+   btn.disabled=false;btn.textContent="送出報名";
+   setErr("session","連線失敗，請確認網路後再送出一次");});
+}
+
+function showDone(d){
+ var s=SESSIONS.filter(function(x){return x.id===d.session})[0];
+ document.getElementById("page").classList.add("hide");
+ var p=document.getElementById("donePage");p.classList.remove("hide");
+ p.innerHTML='<div class="h" style="padding-top:34px"><b>'+(d.wait?"候補登記成功":"報名成功")+'</b><hr></div>'
+  +'<div class="stub"><div class="stub-top"><span>報名編號</span><span>'
+  +(d.wait?"候補第 "+d.seat+" 順位":"第 "+d.seat+" 位")+'</span></div>'
+  +'<div class="code">'+d.code+'</div><hr>'
+  +'<dl class="kv"><dt>梯次</dt><dd>'+s.date+'（'+s.weekday+'）'+s.time+'</dd>'
+  +'<dt>姓名</dt><dd>'+d.name+'</dd>'
+  +'<dt>學校</dt><dd>'+d.school+'　'+d.studentId+'</dd>'
+  +'<dt>場次</dt><dd><span class="redact-dark">當日現場抽籤</span></dd></dl><hr>'
+  +'<p style="font-size:13px;line-height:1.85;margin:0;color:#3C4A42">驗證信已寄到 <b>'+d.email
+  +'</b>，24 小時內點開信中連結才算完成報名。當天報到請出示 <b>學生證正本</b>，或校務系統的 <b>線上在學證明</b> 等相關證明文件。</p></div>'
+  +'<div style="margin-top:20px"><button class="lnk" onclick="backHome()">← 回到報名頁</button></div>';
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function backHome(){document.getElementById("donePage").classList.add("hide");
+ document.getElementById("page").classList.remove("hide");selected="";render();}
+
+try{var _r=new URLSearchParams(location.search).get("ref");
+ if(_r){document.getElementById("referral").value=_r.toUpperCase();refTip();}}catch(e){}
+loadCounts();
+</script>
+</body>
+</html>
