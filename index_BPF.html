@@ -305,7 +305,8 @@ function render(){
  var tl=SESSIONS.reduce(function(a,s){return a+left(s.id)},0);
  document.getElementById("totalLeft").textContent="尚餘 "+tl+" 位";
  document.getElementById("acts").innerHTML=ACTIVITIES.map(function(a){
-  return '<div class="act"><u>'+a.no+'</u><h4>'+a.name+'</h4><p>'+a.desc+'</p></div>';}).join("");
+  return '<div class="act"><u>'+a.no+'</u><span class="org">'+a.org+'</span>'
+   +'<h4>'+a.name+'</h4><p>'+a.desc+'</p></div>';}).join("");
  document.getElementById("tickets").innerHTML=SESSIONS.map(function(s){
   var r=left(s.id),full=r===0,pct=Math.round((CONFIG.capacity-r)/CONFIG.capacity*100);
   return '<button class="ticket" data-on="'+(selected===s.id?1:0)+'" onclick="pick(\''+s.id+'\')">'
