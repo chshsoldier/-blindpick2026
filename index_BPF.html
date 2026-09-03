@@ -132,7 +132,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
     <p class="draw">三場活動在同一天、同一時段平行進行，<b>報名時不能指定</b>。報到完成後現場公開抽籤，抽出的場次即為你當天參加的場次，<b>抽籤結果不接受更換或互換</b>。</p>
 
     <div class="h"><b>選擇梯次</b><i>STEP 01</i><hr>
-      <button class="lnk" onclick="resetDemo()">重設示範名額</button>
+      <button class="lnk" id="demoBtn" onclick="resetDemo()">重設示範名額</button>
     </div>
     <div class="tickets" id="tickets"></div>
     <p class="err" id="err-session"></p>
@@ -191,13 +191,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
         <p class="hint">僅用於活動前一日提醒與當日聯繫。</p>
         <p class="err" id="err-phone"></p>
       </div>
-      <div class="wide">
-        <label class="label" for="referral">推薦人代碼<span style="color:var(--paper-dim);margin-left:6px">（選填）</span></label>
-        <input id="referral" class="input mono" maxlength="6" placeholder="ABC123" oninput="refTip()">
-        <p class="hint">由推薦人提供，格式為 3 碼英文 + 3 碼數字。沒有代碼可留空，不影響報名。</p>
-        <p class="hint" id="refTip"></p>
-        <p class="err" id="err-referral"></p>
-      </div>
+
       <div>
         <label class="label" for="meal">便當<b>*</b></label>
         <select id="meal" class="select">
@@ -209,7 +203,13 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
         <p class="hint">活動全日進行，主辦單位提供午餐便當。</p>
         <p class="err" id="err-meal"></p>
       </div>
-
+      <div class="wide">
+        <label class="label" for="referral">推薦人代碼<span style="color:var(--paper-dim);margin-left:6px">（選填）</span></label>
+        <input id="referral" class="input mono" maxlength="6" placeholder="ABC123" oninput="refTip()">
+        <p class="hint">由推薦人提供，格式為 3 碼英文 + 3 碼數字。沒有代碼可留空，不影響報名。</p>
+        <p class="hint" id="refTip"></p>
+        <p class="err" id="err-referral"></p>
+      </div>
       <div class="wide" style="position:absolute;left:-9999px" aria-hidden="true">
         <label for="website">請勿填寫此欄</label>
         <input id="website" tabindex="-1" autocomplete="off">
@@ -296,6 +296,8 @@ function resetDemo(){
 function left(id){return Math.max(0,CONFIG.capacity-(counts[id]||0));}
 
 function render(){
+ var db=document.getElementById("demoBtn");
+ if(db)db.style.display=API_URL?"none":"";
  document.getElementById("cap").textContent=CONFIG.capacity;
  var tl=SESSIONS.reduce(function(a,s){return a+left(s.id)},0);
  document.getElementById("totalLeft").textContent="尚餘 "+tl+" 位";
