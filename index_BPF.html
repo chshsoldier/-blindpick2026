@@ -245,8 +245,8 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 /* ═══ 上線設定 ═══
    API_URL 留空 = 示範模式（資料只留在本機，不會送出）
    填入 Apps Script 網址 = 正式模式（資料寫入 Google 試算表）  */
-var API_URL="";
-var API_SECRET="盲選2026_請改成你自己的字串";   // 必須與 Apps Script 的 SECRET 相同
+var API_URL="https://script.google.com/macros/s/AKfycbyJMnbCzAZi65lQ-NG1fguJwVf183GV2Y_Wx6eXuf1sGQIDmuuJifdVZ4F25tCsWkZ4/exec";
+var API_SECRET="Dadi90576618#TW";   // 必須與 Apps Script 的 SECRET 相同
 var PAGE_AT=Date.now();
 var DEVICE_ID=(function(){          // 用於「同一裝置」限流，非個人識別
  try{var k="blindpick:dev",v=localStorage.getItem(k);
