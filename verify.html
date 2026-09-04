@@ -50,23 +50,52 @@ function render(ok, title, message) {
     '<p>' + message + '</p>';
 }
 
+// 改用 JSONP（動態插入 <script> 標籤）而非 fetch()，
+// 因為瀏覽器對 <script> 載入外部資源沒有 CORS 限制，可繞開 Apps Script
+// 對跨網域 fetch() 請求時常缺少 Access-Control-Allow-Origin 標頭的已知限制。
+function jsonp(url, cb) {
+  var name = "jsonp_cb_" + Date.now() + "_" + Math.floor(Math.random() * 1e6);
+  var done = false;
+  window[name] = function (data) {
+    done = true;
+    delete window[name];
+    if (s.parentNode) s.parentNode.removeChild(s);
+    cb(null, data);
+  };
+  var s = document.createElement("script");
+  s.src = url + (url.indexOf("?") >= 0 ? "&" : "?") + "callback=" + name;
+  s.onerror = function () {
+    if (done) return;
+    delete window[name];
+    if (s.parentNode) s.parentNode.removeChild(s);
+    cb(new Error("load failed"));
+  };
+  setTimeout(function () {
+    if (done) return;
+    cb(new Error("timeout"));
+  }, 15000);
+  document.head.appendChild(s);
+}
+
 if (!API_URL) {
   render(false, "尚未設定", "此頁面尚未完成設定，請聯絡主辦單位。");
 } else if (!c || !t) {
   render(false, "連結不完整", "請確認你點的是完整的驗證信連結，或重新整理這封信。");
 } else {
-  fetch(API_URL + "?action=verify&c=" + encodeURIComponent(c) + "&t=" + encodeURIComponent(t))
-    .then(function (r) { return r.json(); })
-    .then(function (d) {
+  jsonp(
+    API_URL + "?action=verify&c=" + encodeURIComponent(c) + "&t=" + encodeURIComponent(t),
+    function (err, d) {
+      if (err) {
+        render(false, "連線失敗", "請確認網路連線後重新整理這個頁面再試一次。");
+        return;
+      }
       if (d && typeof d.ok !== "undefined") {
         render(d.ok, d.title || (d.ok ? "驗證完成" : "驗證失敗"), d.message || "");
       } else {
         render(false, "回應異常", "伺服器回傳的內容無法辨識，請聯絡主辦單位協助確認。");
       }
-    })
-    .catch(function () {
-      render(false, "連線失敗", "請確認網路連線後重新整理這個頁面再試一次。");
-    });
+    }
+  );
 }
 </script>
 </body>
