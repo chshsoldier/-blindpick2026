@@ -32,7 +32,10 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 .hero{padding:52px 0 44px;border-bottom:1px solid var(--line)}
 .title{font-family:var(--serif);font-weight:900;font-size:clamp(58px,15vw,132px);line-height:.88;letter-spacing:.06em;margin:0}
 .title em{font-style:normal;color:var(--seal)}
-.lede{font-family:var(--serif);font-weight:500;font-size:clamp(17px,2.6vw,23px);line-height:1.7;margin:26px 0 0;max-width:30ch}
+.lede{font-family:var(--serif);font-weight:700;font-size:clamp(26px,5.2vw,40px);line-height:1.35;margin:28px 0 0;max-width:14ch}
+.hl{background:var(--seal);color:var(--ink);padding:2px 12px 4px;border-radius:2px;
+ box-decoration-break:clone;-webkit-box-decoration-break:clone;
+ display:inline-block;transform:rotate(-0.8deg)}
 .sub{color:var(--paper-dim);font-size:14px;line-height:1.9;margin:18px 0 0;max-width:46ch}
 
 .h{display:flex;align-items:baseline;gap:14px;padding:46px 0 20px}
@@ -134,7 +137,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 
   <header class="hero">
     <h1 class="title">盲<em>選</em></h1>
-    <p class="lede">你選的是時間，不是場次。</p>
+    <p class="lede"><span class="hl">你選的是時間<br>不是活動</span></p>
     <p class="sub">每個梯次當天同時進行三場活動。三場在做什麼都寫在下面，你可以先看，但不能挑——報到之後現場抽籤，抽到哪一場就是哪一場。</p>
   </header>
 
@@ -163,7 +166,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
       </div>
       <div class="wide">
         <label class="label" for="idNo">身分證字號<b>*</b></label>
-        <input id="idNo" class="input mono" maxlength="10" placeholder="A123556789">
+        <input id="idNo" class="input mono" maxlength="10" placeholder="A123456780">
         <label class="check" style="margin-top:10px"><input type="checkbox" id="foreign"><span>我是僑生／外籍生，填寫的是居留證統一證號</span></label>
         <p class="hint">請填寫本人真實身分證字號，上方僅為格式範例。用途僅限投保活動平安險（保險公司需要姓名、出生年月日、身分證字號三項），不作其他利用，活動結束後 30 日內銷毀。</p>
         <p class="err" id="err-idNo"></p>
