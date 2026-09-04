@@ -163,9 +163,9 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
       </div>
       <div class="wide">
         <label class="label" for="idNo">身分證字號<b>*</b></label>
-        <input id="idNo" class="input mono" maxlength="10" placeholder="A123456789">
+        <input id="idNo" class="input mono" maxlength="10" placeholder="A123456780">
         <label class="check" style="margin-top:10px"><input type="checkbox" id="foreign"><span>我是僑生／外籍生，填寫的是居留證統一證號</span></label>
-        <p class="hint">用途僅限投保活動平安險（保險公司需要姓名、出生年月日、身分證字號三項），不作其他利用，活動結束後 30 日內銷毀。</p>
+        <p class="hint">請填寫本人真實身分證字號，上方僅為格式範例。用途僅限投保活動平安險（保險公司需要姓名、出生年月日、身分證字號三項），不作其他利用，活動結束後 30 日內銷毀。</p>
         <p class="err" id="err-idNo"></p>
       </div>
       <div>
@@ -350,9 +350,20 @@ function refTip(){
  if(REFERRERS[v]){t.textContent="✓ 已套用推薦人："+REFERRERS[v];t.style.color="#7FB069";}
  else{t.textContent="查無此代碼，仍可送出，但推薦獎勵將無法計算。";t.style.color="var(--seal)";}
 }
-function mailTip(){var v=document.getElementById("email").value.trim().toLowerCase();
- document.getElementById("mailTip").textContent=
-  (CONFIG.suggestSchoolEmail&&v.indexOf("@")>0&&v.slice(-7)!==".edu.tw")
+var MAIL_TYPO={"gmail.co":"gmail.com","gmial.com":"gmail.com","gmai.com":"gmail.com","gmal.com":"gmail.com",
+ "gnail.com":"gmail.com","gmaill.com":"gmail.com","yahoo.con":"yahoo.com","yaho.com":"yahoo.com",
+ "hotmial.com":"hotmail.com","hotmal.com":"hotmail.com","hotmai.com":"hotmail.com",
+ "outlok.com":"outlook.com","outllok.com":"outlook.com"};
+function mailTip(){
+ var v=document.getElementById("email").value.trim().toLowerCase();
+ var domain=v.split("@")[1]||"";
+ var tipEl=document.getElementById("mailTip");
+ if(MAIL_TYPO[domain]){
+  tipEl.textContent="信箱網域可能打錯了，是不是想打「"+MAIL_TYPO[domain]+"」？請確認後再送出。";
+  tipEl.style.color="var(--alert)";return;
+ }
+ tipEl.style.color="var(--seal)";
+ tipEl.textContent=(CONFIG.suggestSchoolEmail&&v.indexOf("@")>0&&v.slice(-7)!==".edu.tw")
    ?"非學校信箱仍可完成報名，報到時請務必攜帶在學證明文件。":"";}
 function val(id){return document.getElementById(id).value.trim()}
 function setErr(k,m){var e=document.getElementById("err-"+k);if(e)e.textContent=m;
@@ -361,7 +372,7 @@ function setErr(k,m){var e=document.getElementById("err-"+k);if(e)e.textContent=
 function submitForm(){
  var e={};
  if(!selected)e.session="先選一個梯次";
- if(val("name").length<2)e.name="填寫證件上的全名";
+ if(!/^[\u4e00-\u9fffA-Za-z·．''\-\s]{2,30}$/.test(val("name")))e.name="請填寫證件上的真實姓名（不可包含數字或特殊符號）";
  var b=val("birthday");
  if(!b)e.birthday="填寫出生年月日";
  var id=val("idNo").toUpperCase(),fg=document.getElementById("foreign").checked;
