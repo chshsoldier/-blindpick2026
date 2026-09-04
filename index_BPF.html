@@ -40,21 +40,33 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 .h i{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.2em;color:var(--paper-dim)}
 .h hr{flex:1;border:0;border-top:1px solid var(--line)}
 
-.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.act{background:var(--ink-2);border:1px solid var(--line);border-top:2px solid var(--seal);border-radius:3px;padding:22px 18px}
-.act .org{display:block;margin:0 0 9px;font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:.06em;line-height:1.2}
-.act h4{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--seal);margin:0 0 13px;letter-spacing:.14em;line-height:1.5}
-.act p{font-size:13px;line-height:1.85;color:var(--paper-dim);margin:0}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.act{background:transparent;border:0;border-left:1px solid var(--line);border-radius:0;padding:22px 22px}
+.act:first-child{border-left:0}
+.act .org{display:block;margin:0 0 8px;font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:.04em;line-height:1.15}
+.act h4{font-family:var(--sans);font-size:11px;font-weight:500;color:var(--seal);margin:0 0 11px;letter-spacing:.14em;line-height:1.5;text-transform:uppercase}
+.act p{font-size:12.5px;line-height:1.8;color:var(--paper-dim);margin:0}
+@media(max-width:720px){
+ .acts{grid-template-columns:1fr;border-bottom:0}
+ .act{border-left:0;border-top:1px solid var(--line);padding:18px 2px}
+ .act:first-child{border-top:0}
+}
 .draw{margin-top:16px;padding-left:15px;border-left:2px solid var(--seal);font-size:13px;line-height:1.85;color:var(--paper-dim)}
 .draw b{color:var(--paper);font-weight:500}
 
 .tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.ticket{position:relative;text-align:left;width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:3px;padding:20px 18px 18px;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease;color:inherit;font:inherit}
-.ticket:hover:not(:disabled){transform:translateY(-3px);border-color:rgba(217,163,30,.5)}
+.ticket{position:relative;text-align:left;width:100%;background:var(--ink-2);border:2px solid var(--line);border-radius:3px;padding:20px 18px 18px;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;color:inherit;font:inherit}
+.ticket:hover:not(:disabled){transform:translateY(-3px);border-color:rgba(217,163,30,.6)}
 .ticket:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
-.ticket[data-on="1"]{background:var(--ink-3);border-color:var(--seal)}
+.ticket[data-on="1"]{background:var(--ink-3);border-color:var(--seal);box-shadow:0 0 0 3px rgba(217,163,30,.22),0 8px 22px rgba(217,163,30,.18);transform:translateY(-3px)}
 .ticket:disabled{cursor:not-allowed;opacity:.55}
-.tk-id{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--seal);display:flex;justify-content:space-between}
+.tk-check{position:absolute;top:16px;right:16px;width:24px;height:24px;border-radius:50%;
+ border:2px solid rgba(234,231,220,.3);display:flex;align-items:center;justify-content:center;
+ transition:background .18s ease,border-color .18s ease}
+.ticket[data-on="1"] .tk-check{background:var(--seal);border-color:var(--seal)}
+.tk-check svg{width:13px;height:13px;opacity:0;transition:opacity .15s ease}
+.ticket[data-on="1"] .tk-check svg{opacity:1}
+.tk-id{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--seal)}
 .tk-date{font-family:var(--mono);font-size:34px;font-weight:500;margin:10px 0 2px}
 .tk-meta{font-size:12px;color:var(--paper-dim);letter-spacing:.08em}
 .perf{margin:16px -18px;border-top:1px dashed rgba(234,231,220,.28);position:relative}
@@ -103,7 +115,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 .lnk:hover{text-decoration:underline}
 .foot{margin-top:54px;padding-top:22px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--paper-dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .hide{display:none}
-@media(max-width:720px){.acts,.tickets{grid-template-columns:1fr}}
+@media(max-width:720px){.tickets{grid-template-columns:1fr}}
 @media(max-width:640px){.grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -309,8 +321,9 @@ function render(){
    +'<h4>'+a.name+'</h4><p>'+a.desc+'</p></div>';}).join("");
  document.getElementById("tickets").innerHTML=SESSIONS.map(function(s){
   var r=left(s.id),full=r===0,pct=Math.round((CONFIG.capacity-r)/CONFIG.capacity*100);
-  return '<button class="ticket" data-on="'+(selected===s.id?1:0)+'" onclick="pick(\''+s.id+'\')">'
-   +'<div class="tk-id"><span>梯次 '+s.id+'</span><span>'+(selected===s.id?"已選":"")+'</span></div>'
+  return '<button class="ticket" data-on="'+(selected===s.id?1:0)+'" onclick="pick(\''+s.id+'\')" aria-pressed="'+(selected===s.id?"true":"false")+'">'
+   +'<span class="tk-check"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#16221C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
+   +'<div class="tk-id"><span>梯次 '+s.id+'</span></div>'
    +'<div class="tk-date">'+s.date+'</div>'
    +'<div class="tk-meta">'+s.weekday+'　'+s.time+'</div>'
    +'<div class="perf"></div>'
@@ -395,7 +408,7 @@ function submitForm(){
   session:selected,name:person.name,birthday:val("birthday"),
   idNo:id,foreign:fg,school:person.school,studentId:person.studentId,
   grade:gr,meal:ml,email:person.email,phone:val("phone").replace(/[\s-]/g,""),
-  referral:rf,agreePrivacy:true,agreeCheckIn:true,
+  referral:rf,channel:CHANNEL_CODE,agreePrivacy:true,agreeCheckIn:true,
   attempt:Date.now().toString(36)+Math.random().toString(36).slice(2,8)};  // 同一次送出的重試共用此碼，不重複計入裝置額度
  send(payload,person,0);
 }
@@ -444,8 +457,14 @@ function showDone(d){
 function backHome(){document.getElementById("donePage").classList.add("hide");
  document.getElementById("page").classList.remove("hide");selected="";render();}
 
-try{var _r=new URLSearchParams(location.search).get("ref");
- if(_r){document.getElementById("referral").value=_r.toUpperCase();refTip();}}catch(e){}
+var CHANNEL_CODE="";
+try{
+ var _q=new URLSearchParams(location.search);
+ var _r=_q.get("ref");
+ if(_r){document.getElementById("referral").value=_r.toUpperCase();refTip();}
+ var _s=_q.get("src");                              // 管道代碼：只從網址讀，不顯示、不給填
+ if(_s)CHANNEL_CODE=_s.toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,30);
+}catch(e){}
 loadCounts();
 </script>
 </body>
