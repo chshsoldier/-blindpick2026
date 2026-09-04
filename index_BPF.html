@@ -395,7 +395,8 @@ function submitForm(){
   session:selected,name:person.name,birthday:val("birthday"),
   idNo:id,foreign:fg,school:person.school,studentId:person.studentId,
   grade:gr,meal:ml,email:person.email,phone:val("phone").replace(/[\s-]/g,""),
-  referral:rf,agreePrivacy:true,agreeCheckIn:true};
+  referral:rf,agreePrivacy:true,agreeCheckIn:true,
+  attempt:Date.now().toString(36)+Math.random().toString(36).slice(2,8)};  // 同一次送出的重試共用此碼，不重複計入裝置額度
  send(payload,person,0);
 }
 
@@ -447,8 +448,5 @@ try{var _r=new URLSearchParams(location.search).get("ref");
  if(_r){document.getElementById("referral").value=_r.toUpperCase();refTip();}}catch(e){}
 loadCounts();
 </script>
-</body>
-</html>
-
 </body>
 </html>
