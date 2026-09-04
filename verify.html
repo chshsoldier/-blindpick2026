@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盲選 2026｜報名驗證</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16221C; --paper:#EAE7DC; --paper-dim:#9BA79E; --seal:#D9A31E; --alert:#D4614A;
+  --serif:'Noto Serif TC',serif; --sans:'Noto Sans TC',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);
+ min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{max-width:460px;width:100%;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--paper-dim)}
+h1{font-family:var(--serif);font-size:clamp(26px,7vw,34px);font-weight:900;margin:18px 0 14px}
+h1.ok{color:var(--seal)} h1.bad{color:var(--alert)}
+p{font-size:15px;line-height:1.9;color:#C8CCC7;margin:0}
+.spin{width:26px;height:26px;border:2px solid rgba(234,231,220,.25);border-top-color:var(--seal);
+ border-radius:50%;margin:0 auto 18px;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.foot{font-size:12px;color:var(--paper-dim);margin-top:30px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">盲選 2026</div>
+  <div id="body">
+    <div class="spin"></div>
+    <h1>驗證中…</h1>
+    <p>請稍候，正在確認你的報名資料。</p>
+  </div>
+  <div class="foot">臺灣大學政治學系｜聯絡信箱：dadiresearch6618@gmail.com</div>
+</div>
+
+<script>
+// 這裡的 API_URL 必須跟報名主頁的 API_URL 填成一模一樣
+var API_URL = "https://script.google.com/macros/s/AKfycbyJMnbCzAZi65lQ-NG1fguJwVf183GV2Y_Wx6eXuf1sGQIDmuuJifdVZ4F25tCsWkZ4/exec";
+
+var q = new URLSearchParams(location.search);
+var c = q.get("c") || "";
+var t = q.get("t") || "";
+var body = document.getElementById("body");
+
+function render(ok, title, message) {
+  body.innerHTML =
+    '<h1 class="' + (ok ? "ok" : "bad") + '">' + title + '</h1>' +
+    '<p>' + message + '</p>';
+}
+
+if (!API_URL) {
+  render(false, "尚未設定", "此頁面尚未完成設定，請聯絡主辦單位。");
+} else if (!c || !t) {
+  render(false, "連結不完整", "請確認你點的是完整的驗證信連結，或重新整理這封信。");
+} else {
+  fetch(API_URL + "?action=verify&c=" + encodeURIComponent(c) + "&t=" + encodeURIComponent(t))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && typeof d.ok !== "undefined") {
+        render(d.ok, d.title || (d.ok ? "驗證完成" : "驗證失敗"), d.message || "");
+      } else {
+        render(false, "回應異常", "伺服器回傳的內容無法辨識，請聯絡主辦單位協助確認。");
+      }
+    })
+    .catch(function () {
+      render(false, "連線失敗", "請確認網路連線後重新整理這個頁面再試一次。");
+    });
+}
+</script>
+</body>
+</html>
