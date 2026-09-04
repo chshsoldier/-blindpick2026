@@ -50,52 +50,36 @@ function render(ok, title, message) {
     '<p>' + message + '</p>';
 }
 
-// 改用 JSONP（動態插入 <script> 標籤）而非 fetch()，
-// 因為瀏覽器對 <script> 載入外部資源沒有 CORS 限制，可繞開 Apps Script
-// 對跨網域 fetch() 請求時常缺少 Access-Control-Allow-Origin 標頭的已知限制。
-function jsonp(url, cb) {
-  var name = "jsonp_cb_" + Date.now() + "_" + Math.floor(Math.random() * 1e6);
-  var done = false;
-  window[name] = function (data) {
-    done = true;
-    delete window[name];
-    if (s.parentNode) s.parentNode.removeChild(s);
-    cb(null, data);
-  };
-  var s = document.createElement("script");
-  s.src = url + (url.indexOf("?") >= 0 ? "&" : "?") + "callback=" + name;
-  s.onerror = function () {
-    if (done) return;
-    delete window[name];
-    if (s.parentNode) s.parentNode.removeChild(s);
-    cb(new Error("load failed"));
-  };
-  setTimeout(function () {
-    if (done) return;
-    cb(new Error("timeout"));
-  }, 15000);
-  document.head.appendChild(s);
-}
+// 改用隱藏 iframe + postMessage，不再用 fetch() 或 <script> JSONP——
+// 前者會被瀏覽器的 CORS 政策擋下（Apps Script 常缺少 Access-Control-Allow-Origin
+// 標頭），後者會被 CORB（Cross-Origin Read Blocking）擋下（跟 Apps Script 內部
+// 轉址機制有已知衝突）。iframe 單純載入一個網址不受這兩者限制，postMessage 是
+// 瀏覽器原生設計來讓不同網域的頁面互相傳遞資料的機制。
+var timeoutId;
+
+window.addEventListener("message", function (event) {
+  if (!event.data || event.data.source !== "blindpick-verify") return;
+  clearTimeout(timeoutId);
+  var d = event.data.payload;
+  if (d && typeof d.ok !== "undefined") {
+    render(d.ok, d.title || (d.ok ? "驗證完成" : "驗證失敗"), d.message || "");
+  } else {
+    render(false, "回應異常", "伺服器回傳的內容無法辨識，請聯絡主辦單位協助確認。");
+  }
+});
 
 if (!API_URL) {
   render(false, "尚未設定", "此頁面尚未完成設定，請聯絡主辦單位。");
 } else if (!c || !t) {
   render(false, "連結不完整", "請確認你點的是完整的驗證信連結，或重新整理這封信。");
 } else {
-  jsonp(
-    API_URL + "?action=verify&c=" + encodeURIComponent(c) + "&t=" + encodeURIComponent(t),
-    function (err, d) {
-      if (err) {
-        render(false, "連線失敗", "請確認網路連線後重新整理這個頁面再試一次。");
-        return;
-      }
-      if (d && typeof d.ok !== "undefined") {
-        render(d.ok, d.title || (d.ok ? "驗證完成" : "驗證失敗"), d.message || "");
-      } else {
-        render(false, "回應異常", "伺服器回傳的內容無法辨識，請聯絡主辦單位協助確認。");
-      }
-    }
-  );
+  var iframe = document.createElement("iframe");
+  iframe.style.display = "none";
+  iframe.src = API_URL + "?action=verify&c=" + encodeURIComponent(c) + "&t=" + encodeURIComponent(t);
+  document.body.appendChild(iframe);
+  timeoutId = setTimeout(function () {
+    render(false, "連線逾時", "請確認網路連線後重新整理這個頁面再試一次。");
+  }, 15000);
 }
 </script>
 </body>
