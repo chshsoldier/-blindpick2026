@@ -62,6 +62,9 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 .ticket:hover:not(:disabled){transform:translateY(-3px);border-color:rgba(217,163,30,.6)}
 .ticket:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
 .ticket[data-on="1"]{background:var(--ink-3);border-color:var(--seal);box-shadow:0 0 0 3px rgba(217,163,30,.22),0 8px 22px rgba(217,163,30,.18);transform:translateY(-3px)}
+.ticket.closed{opacity:1;background:repeating-linear-gradient(135deg,var(--ink-2) 0 10px,rgba(255,255,255,.03) 10px 20px);border-style:dashed;pointer-events:none}
+.ticket.closed>*:not(.stamp){opacity:.4}
+.ticket.closed .stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);border:3px solid var(--alert);color:var(--alert);background:rgba(22,34,28,.88);font-weight:900;font-size:22px;letter-spacing:.3em;padding:6px 16px 6px 22px;border-radius:3px;white-space:nowrap;filter:none;z-index:2}
 .ticket:disabled{cursor:not-allowed;opacity:.55}
 .tk-check{position:absolute;top:16px;right:16px;width:24px;height:24px;border-radius:50%;
  border:2px solid rgba(234,231,220,.3);display:flex;align-items:center;justify-content:center;
@@ -323,9 +326,9 @@ function render(){
   return '<div class="act"><span class="org">'+a.org+'</span>'
    +'<h4>'+a.name+'</h4><p>'+a.desc+'</p></div>';}).join("");
  document.getElementById("tickets").innerHTML=SESSIONS.map(function(s){
-  var r=left(s.id),full=r===0,pct=Math.round((CONFIG.capacity-r)/CONFIG.capacity*100);
-  return '<button class="ticket" data-on="'+(selected===s.id?1:0)+'" onclick="pick(\''+s.id+'\')" aria-pressed="'+(selected===s.id?"true":"false")+'">'
-   +'<span class="tk-check"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#16221C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
+  var closed=(counts.closed||[]).indexOf(s.id)>=0,r=left(s.id),full=r===0,pct=Math.round((CONFIG.capacity-r)/CONFIG.capacity*100);
+  return '<button class="ticket'+(closed?' closed':'')+'" data-on="'+(selected===s.id?1:0)+'" '+(closed?'disabled ':'')+'onclick="pick(\''+s.id+'\')" aria-pressed="'+(selected===s.id?"true":"false")+'">'
+   +(closed?'<span class="stamp">報名截止</span>':'')+'<span class="tk-check"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#16221C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
    +'<div class="tk-id"><span>梯次 '+s.id+'</span></div>'
    +'<div class="tk-date">'+s.date+'</div>'
    +'<div class="tk-meta">'+s.weekday+'　'+s.time+'</div>'
@@ -333,11 +336,11 @@ function render(){
    +'<div class="redact-label">分配場次</div>'
    +'<div class="redact"><span>當日抽籤</span></div>'
    +'<div class="bar"><i style="width:'+pct+'%" data-full="'+(full?1:0)+'"></i></div>'
-   +(full?'<div class="full">已額滿　可登記候補</div>'
+   +(closed?'<div class="full">報名已截止</div>':full?'<div class="full">已額滿　可登記候補</div>'
         :'<div class="left"><span><b>'+r+'</b> 位</span><u>/ '+CONFIG.capacity+'</u></div>')
    +'</button>';}).join("");
 }
-function pick(id){selected=id;setErr("session","");render();}
+function pick(id){if((counts.closed||[]).indexOf(id)>=0)return;selected=id;setErr("session","");render();}
 
 var sel=document.getElementById("school");
 sel.innerHTML='<option value="">請選擇</option>'+SCHOOLS.map(function(s){return '<option>'+s+'</option>'}).join("")+'<option value="__other__">其他（自行填寫）</option>';
