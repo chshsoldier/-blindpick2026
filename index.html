@@ -195,7 +195,6 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
       <div class="wide">
         <label class="label" for="idNo">身分證字號<b>*</b></label>
         <input id="idNo" class="input mono" maxlength="10" placeholder="A123456780">
-        <label class="check" style="margin-top:10px"><input type="checkbox" id="foreign"><span>我是僑生／外籍生，填寫的是居留證統一證號</span></label>
         <p class="hint">請填寫本人真實身分證字號，上方僅為格式範例。用途僅限投保活動平安險（保險公司需要姓名、出生年月日、身分證字號三項），不作其他利用，活動結束後 30 日內銷毀。</p>
         <p class="err" id="err-idNo"></p>
       </div>
@@ -261,7 +260,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
         <b>報名前先確認這四件事</b><br>
         一、報名時無法指定活動場次，報到後由現場公開抽籤決定，抽籤結果不接受更換或互換。<br>
         二、報到需出示 <b>學生證正本</b>，或校務系統的 <b>線上在學證明</b>、學籍查詢畫面等相關證明文件；無法證明在學身分者無法入場，名額直接讓給現場候補。<br>
-        三、限 <b>大學部在學學生</b>，研究生、在職專班、已畢業者不在本次對象內。每人限報一個梯次，如重複報名，<b>以最後一筆為準</b>，先前報名之名額將自動釋出。<br>四、<b>報名截止後不得再更改梯次</b>，請於報名前確認可出席之日期。活動全日進行（報到 08:40–09:00，課程 09:00–17:30），請預留整天時間。
+        三、限 <b>大學部在學學生</b>，研究生、在職專班、已畢業者，以及<b>僑生、外籍生</b>，不在本次對象內。每人限報一個梯次，如重複報名，<b>以最後一筆為準</b>，先前報名之名額將自動釋出。<br>四、<b>報名截止後不得再更改梯次</b>，請於報名前確認可出席之日期。活動全日進行（報到 08:40–09:00，課程 09:00–17:30），請預留整天時間。
       </div>
       <div class="wide">
         <label class="check"><input type="checkbox" id="agreePrivacy"><span>我已閱讀個人資料蒐集告知事項，同意主辦單位於「活動報名與資格審查、投保活動平安險、活動聯繫與通知」目的內，於活動結束後 30 日之期間內處理及利用上述資料，並瞭解可隨時要求查詢、更正或刪除。</span></label>
@@ -313,7 +312,7 @@ var SCHOOLS=["國立臺灣大學","國立政治大學","國立清華大學","國
 
 var LC={A:10,B:11,C:12,D:13,E:14,F:15,G:16,H:17,I:34,J:18,K:19,L:20,M:21,N:22,O:35,P:23,Q:24,R:25,S:26,T:27,U:28,V:29,W:32,X:30,Y:31,Z:33};
 function validTwId(raw){var s=(raw||"").toUpperCase().trim();
- if(!/^[A-Z][1289]\d{8}$/.test(s))return false;
+ if(!/^[A-Z][12]\d{8}$/.test(s))return false;
  var c=LC[s[0]],sum=Math.floor(c/10)+(c%10)*9,w=[8,7,6,5,4,3,2,1,1];
  for(var i=0;i<9;i++)sum+=parseInt(s[i+1],10)*w[i];
  return sum%10===0;}
@@ -405,10 +404,10 @@ function submitForm(){
  if(!/^[\u4e00-\u9fffA-Za-z·．''\-\s]{2,30}$/.test(val("name")))e.name="請填寫證件上的真實姓名（不可包含數字或特殊符號）";
  var b=val("birthday");
  if(!b)e.birthday="填寫出生年月日";
- var id=val("idNo").toUpperCase(),fg=document.getElementById("foreign").checked;
+ var id=val("idNo").toUpperCase();
  if(!id)e.idNo="填寫身分證字號";
  else if(["A123456789"].indexOf(id)>=0)e.idNo="此為範例用途的號碼，請填寫本人真實身分證字號";
- else if(fg?!validResId(id):!validTwId(id))e.idNo=fg?"居留證號格式不符":"身分證字號檢查碼不符，請重新確認";
+ else if(!validTwId(id))e.idNo="身分證字號檢查碼不符，請重新確認（僑生、外籍生不在本次參加對象內）";
  var sc=sel.value;
  if(!sc)e.school="選擇就讀學校";
  else if(sc==="__other__"&&!val("schoolOther"))e.school="填寫學校全名";
@@ -448,7 +447,7 @@ function submitForm(){
  // 正式模式：送到 Apps Script
  var payload={secret:API_SECRET,dev:DEVICE_ID,hp:val("website"),elapsed:Date.now()-PAGE_AT,
   session:selected,name:person.name,birthday:val("birthday"),
-  idNo:id,foreign:fg,school:person.school,studentId:person.studentId,
+  idNo:id,school:person.school,studentId:person.studentId,
   grade:gr,meal:ml,email:person.email,phone:val("phone").replace(/[\s-]/g,""),
   referral:rf,channel:CHANNEL_CODE,agreePrivacy:true,agreeCheckIn:true,
   attempt:Date.now().toString(36)+Math.random().toString(36).slice(2,8)};  // 同一次送出的重試共用此碼，不重複計入裝置額度
