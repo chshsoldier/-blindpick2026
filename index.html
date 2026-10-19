@@ -57,7 +57,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 .draw{margin-top:16px;padding-left:15px;border-left:2px solid var(--seal);font-size:13px;line-height:1.85;color:var(--paper-dim)}
 .draw b{color:var(--paper);font-weight:500}
 
-.tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tickets{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .ticket{position:relative;text-align:left;width:100%;background:var(--ink-2);border:2px solid var(--line);border-radius:3px;padding:20px 18px 18px;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;color:inherit;font:inherit}
 .ticket:hover:not(:disabled){transform:translateY(-3px);border-color:rgba(217,163,30,.6)}
 .ticket:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
@@ -120,6 +120,13 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 .lnk{background:none;border:0;color:var(--seal);cursor:pointer;font-family:var(--mono);font-size:12px;letter-spacing:.16em;padding:0}
 .lnk:hover{text-decoration:underline}
 .foot{margin-top:54px;padding-top:22px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--paper-dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.perks{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:30px 0 0}
+.perk{background:var(--ink-2);padding:20px 18px}
+.perk small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--paper-dim)}
+.perk b{display:block;margin-top:8px;font-family:var(--serif);font-weight:900;font-size:clamp(20px,3.6vw,26px);line-height:1.3;color:var(--seal)}
+.when{margin:14px 0 0;font-size:14px;line-height:1.9;color:var(--paper)}
+.when b{font-weight:700}
+@media(max-width:560px){.perks{grid-template-columns:1fr}}
 .hide{display:none}
 @media(max-width:720px){.tickets{grid-template-columns:1fr}}
 @media(max-width:640px){.grid{grid-template-columns:1fr}}
@@ -129,11 +136,11 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
 <body>
 <div class="wrap">
   <div class="topbar">
-    <span><b>臺灣大學政治系　童涵浦教授研究計畫</b>　政治態度調查 2026</span>
+    <span><b>臺灣大學政治學系　童涵浦教授</b>　青年參與社會研究計畫 2026</span>
     <span>主辦單位：臺大政治系</span>
   </div>
   <div class="eyebrow">
-    <span>限大學部在學生</span><span>三梯次</span>
+    <span>限大學部在學生</span><span>兩梯次</span>
     <span>每梯 <span id="cap"></span> 人</span>
     <span id="totalLeft"></span>
   </div>
@@ -143,6 +150,13 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
     <p class="lede"><span class="hl">你選的是時間<br>不是活動</span></p>
     <p class="sub">每個梯次當天同時進行三場活動。三場在做什麼都寫在下面，你可以先看，但不能挑——報到之後現場抽籤，抽到哪一場就是哪一場。</p>
   </header>
+
+  <section class="perks" aria-label="參加好處">
+    <div class="perk"><small>費用</small><b>課程免費</b></div>
+    <div class="perk"><small>餐點</small><b>含午餐與下午茶</b></div>
+    <div class="perk"><small>問卷酬勞</small><b>最高 600 元現金</b></div>
+  </section>
+  <p class="when">前測、後測問卷都完成，最高可領 600 元現金。<br><b>報到 08:40–09:00　課程 09:00–17:30</b></p>
 
   <div id="page">
     <div class="h"><b>當天的三場活動</b><i>全部公開</i><hr></div>
@@ -236,7 +250,7 @@ body{background:var(--ink);color:var(--paper);font-family:var(--sans);color-sche
         <b>報名前先確認這四件事</b><br>
         一、報名時無法指定活動場次，報到後由現場公開抽籤決定，抽籤結果不接受更換或互換。<br>
         二、報到需出示 <b>學生證正本</b>，或校務系統的 <b>線上在學證明</b>、學籍查詢畫面等相關證明文件；無法證明在學身分者無法入場，名額直接讓給現場候補。<br>
-        三、限 <b>大學部在學學生</b>，研究生、在職專班、已畢業者不在本次對象內。每人限報一個梯次，如重複報名，<b>以最後一筆為準</b>，先前報名之名額將自動釋出。<br>四、<b>報名截止後不得再更改梯次</b>，請於報名前確認可出席之日期。活動全日進行（08:40–17:40），請預留整天時間。
+        三、限 <b>大學部在學學生</b>，研究生、在職專班、已畢業者不在本次對象內。每人限報一個梯次，如重複報名，<b>以最後一筆為準</b>，先前報名之名額將自動釋出。<br>四、<b>報名截止後不得再更改梯次</b>，請於報名前確認可出席之日期。活動全日進行（報到 08:40–09:00，課程 09:00–17:30），請預留整天時間。
       </div>
       <div class="wide">
         <label class="check"><input type="checkbox" id="agreePrivacy"><span>我已閱讀個人資料蒐集告知事項，同意主辦單位於「活動報名與資格審查、投保活動平安險、活動聯繫與通知」目的內，於活動結束後 30 日之期間內處理及利用上述資料，並瞭解可隨時要求查詢、更正或刪除。</span></label>
@@ -274,9 +288,8 @@ var DEVICE_ID=(function(){          // 用於「同一裝置」限流，非個�
 
 var CONFIG={capacity:220,suggestSchoolEmail:true,allowWaitlist:true};
 var SESSIONS=[
- {id:"A",date:"10 / 17",weekday:"週六",time:"08:40 – 17:40"},
- {id:"B",date:"10 / 18",weekday:"週日",time:"08:40 – 17:40"},
- {id:"C",date:"11 / 07",weekday:"週六",time:"08:40 – 17:40"}];
+ {id:"C",date:"11 / 07",weekday:"週六",time:"09:00 – 17:30"},
+ {id:"D",date:"01 / 06",weekday:"週三",time:"09:00 – 17:30"}];
 var ACTIVITIES=[
  {org:"好森",name:"校園永續生活",
   desc:"走進台大校園實地採集，從生態、植物與食農，重新看見人與土地的關係。"},
@@ -284,7 +297,7 @@ var ACTIVITIES=[
   desc:"從武器與戰略概念認識現代戰爭樣貌，破除網路軍事謠言，建立防衛信心。"},
  {org:"紅十字會",name:"急救與應變訓練",
   desc:"由專業教練帶學 CPR、異物哽塞排除與基本急救，培養緊急事故應變能力。"}];
-var SEED={A:220,B:163,C:71,waitA:5,waitB:0,waitC:0};
+var SEED={C:71,D:0,waitC:0,waitD:0};
 var SCHOOLS=["國立臺灣大學","國立政治大學","國立清華大學","國立陽明交通大學","國立成功大學","國立臺灣師範大學","國立中央大學","國立中山大學","國立中興大學","國立中正大學","國立臺北大學","國立臺灣科技大學","國立臺北科技大學","國立雲林科技大學","國立高雄科技大學","國立臺灣海洋大學","國立東華大學","國立暨南國際大學","國立宜蘭大學","國立聯合大學","國立屏東大學","國立臺東大學","國立嘉義大學","國立彰化師範大學","國立高雄師範大學","國立臺北教育大學","國立臺中教育大學","國立臺南大學","國立臺北護理健康大學","國立臺北藝術大學","國立臺灣藝術大學","國立臺南藝術大學","國立體育大學","國立臺北商業大學","臺北市立大學","淡江大學","輔仁大學","東吳大學","中原大學","逢甲大學","東海大學","靜宜大學","元智大學","中國文化大學","世新大學","銘傳大學","實踐大學","大同大學","華梵大學","真理大學","長庚大學","臺北醫學大學","中國醫藥大學","中山醫學大學","高雄醫學大學","慈濟大學","亞洲大學","義守大學","長榮大學","佛光大學","南華大學","開南大學","玄奘大學","南臺科技大學","崑山科技大學","朝陽科技大學","嶺東科技大學","龍華科技大學","明新科技大學","建國科技大學","正修科技大學","樹德科技大學","弘光科技大學","中國科技大學","致理科技大學","德明財經科技大學","文藻外語大學"];
 
 var LC={A:10,B:11,C:12,D:13,E:14,F:15,G:16,H:17,I:34,J:18,K:19,L:20,M:21,N:22,O:35,P:23,Q:24,R:25,S:26,T:27,U:28,V:29,W:32,X:30,Y:31,Z:33};
